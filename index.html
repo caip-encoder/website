@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAIP — Contrastive Action-Image Pre-training for Visuomotor Control</title>
+  <meta name="description" content="CAIP is an action-centric vision encoder that learns manipulation-relevant visual representations from large-scale egocentric human video, using hand poses as a proxy for end-effector actions." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Contrastive Action-Image Pre-training for Visuomotor Control" />
+  <meta property="og:description" content="An action-centric vision encoder for dexterous manipulation, trained on 32,041 hours of egocentric human video." />
+  <meta property="og:type" content="website" />
+  <!-- <meta property="og:image" content="static/figures/og_card.png" /> -->
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232f5fd0'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body>
+  <!-- ============================ NAV ============================ -->
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="#top">CAIP</a>
+      <nav class="nav-links" aria-label="Section navigation">
+        <a href="#overview">Overview</a>
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#demos">Demos</a>
+        <a href="#analysis">Analysis</a>
+        <a href="#ablations">Ablations</a>
+        <a href="#bibtex">BibTeX</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ============================ HERO ============================ -->
+    <section class="hero">
+      <div class="container">
+        <p class="eyebrow">CoRL 2026 · Submission</p>
+        <h1 class="title">Contrastive Action-Image Pre-training<br />for Visuomotor Control</h1>
+
+        <div class="authors">
+          <span class="author"><a href="#">Yuvan Sharma</a><sup>1,*</sup></span>
+          <span class="author"><a href="#">Dantong Niu</a><sup>1,2,*</sup></span>
+          <span class="author"><a href="#">Anirudh Pai</a><sup>1,*</sup></span>
+          <span class="author"><a href="#">Zekai Wang</a><sup>1</sup></span>
+          <span class="author"><a href="#">Zhuoyang Liu</a><sup>1</sup></span>
+          <span class="author"><a href="#">Baifeng Shi</a><sup>1</sup></span>
+          <span class="author"><a href="#">Stefano Saravalle</a><sup>3,4</sup></span>
+          <span class="author"><a href="#">Boning Shao</a><sup>1</sup></span>
+          <span class="author"><a href="#">Ruijie Zheng</a><sup>2</sup></span>
+          <span class="author"><a href="#">Jing Wang</a><sup>2</sup></span>
+          <span class="author"><a href="#">Konstantinos Kallidromitis</a><sup>4</sup></span>
+          <span class="author"><a href="#">Yusuke Kato</a><sup>4</sup></span>
+          <span class="author"><a href="#">Fabio Galasso</a><sup>3</sup></span>
+          <span class="author"><a href="#">Yuke Zhu</a><sup>2</sup></span>
+          <span class="author"><a href="#">Danfei Xu</a><sup>2</sup></span>
+          <span class="author"><a href="#">Linxi &ldquo;Jim&rdquo; Fan</a><sup>2</sup></span>
+          <span class="author"><a href="#">Jitendra Malik</a><sup>1</sup></span>
+          <span class="author"><a href="#">Trevor Darrell</a><sup>1,&dagger;</sup></span>
+          <span class="author"><a href="#">Roei Herzig</a><sup>1,&dagger;</sup></span>
+        </div>
+
+        <div class="affiliations">
+          <span><sup>1</sup>UC Berkeley</span>
+          <span><sup>2</sup>NVIDIA</span>
+          <span><sup>3</sup>Sapienza University of Rome</span>
+          <span><sup>4</sup>Panasonic</span>
+        </div>
+        <div class="contrib-note">
+          <span><sup>*</sup>Equal Contribution</span>
+          <span><sup>&dagger;</sup>Equal Advising</span>
+        </div>
+
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#" aria-disabled="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15a0 0 0 0 1 0 0H6a0 0 0 0 1 0 0V2z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M14 2v6h6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+            Paper <span class="soon">(arXiv soon)</span>
+          </a>
+          <a class="btn" href="#" aria-disabled="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.7 4.7 0 0 0-1.3-3.2 4.4 4.4 0 0 0-.1-3.2s-1-.3-3.5 1.3a12 12 0 0 0-6.3 0C7.5 2 6.5 2.3 6.5 2.3a4.4 4.4 0 0 0-.1 3.2A4.7 4.7 0 0 0 5 8.7c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Code <span class="soon">(soon)</span>
+          </a>
+          <a class="btn" href="#bibtex">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            BibTeX
+          </a>
+        </div>
+
+        <!-- ---------------------- TEASER VIDEO ---------------------- -->
+        <figure class="hero-video">
+          <!-- MEDIA SLOT: teaser-video -> static/videos/teaser.mp4 -->
+          <div class="media-placeholder ratio-16x9" data-slot="teaser-video">
+            <span class="ph-label">Teaser video</span>
+            <span class="ph-path">static/videos/teaser.mp4</span>
+          </div>
+          <!--
+          When the file is available, replace the placeholder above with:
+          <video controls playsinline poster="static/figures/teaser_poster.jpg">
+            <source src="static/videos/teaser.mp4" type="video/mp4" />
+          </video>
+          -->
+          <figcaption class="video-caption">
+            <span>Project overview.</span>
+            <!-- Optional AI voiceover track. When ready, wire the audio file here. -->
+            <button class="narration-toggle" id="narration-toggle" type="button" hidden>
+              <span class="dot"></span> Play with narration
+            </button>
+          </figcaption>
+        </figure>
+        <!-- Hidden narration audio (AI readover of the script). Unhide button in main.js when src is set. -->
+        <audio id="narration-audio" preload="none">
+          <!-- <source src="static/videos/narration.mp3" type="audio/mpeg" /> -->
+        </audio>
+
+        <!-- ---------------------- TL;DR ---------------------- -->
+        <p class="tldr">
+          <strong>TL;DR.</strong> Robot data is too scarce for large-scale pre-training. CAIP instead learns
+          <em>action-centric</em> visual features from <strong>32,041 hours</strong> of egocentric human video by
+          treating 3D hand poses as a proxy for end-effector actions, aligning vision and action through a
+          contrastive objective. With only <strong>88 hours</strong> of robot data, CAIP reaches a
+          <strong>76%</strong> average success rate on real-world dexterous manipulation — over
+          <strong>30 points</strong> above the strongest vision-encoder baseline.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================ OVERVIEW / MOTIVATION ============================ -->
+    <section id="overview" class="section">
+      <div class="container">
+        <p class="section-eyebrow">Motivation</p>
+        <h2 class="section-title">Why action-centric, egocentric pre-training?</h2>
+
+        <div class="prose">
+          <p>
+            Visual perception underpins robotic manipulation, yet the encoders that power modern policies were
+            never designed for physical interaction. Image&ndash;text models like CLIP and SigLIP capture
+            <strong>semantics</strong>; self-distilled models like DINOv2 capture fine-grained
+            <strong>geometry</strong>. But neither sees manipulation environments during training, and neither
+            receives <strong>action supervision</strong>. The result is a fundamental misalignment: strong
+            scene understanding, but no action-centric structure for downstream control.
+          </p>
+          <p>
+            The most direct fix &mdash; pre-training on robot trajectories &mdash; runs into a wall: robot data
+            is orders of magnitude smaller than internet-scale corpora. Egocentric human video, by contrast, is
+            abundant and captures the same first-person viewpoint a head-mounted robot camera observes, with
+            naturally co-occurring hand motion. <strong>CAIP turns human hand poses into a proxy for
+            end-effector actions</strong>, unlocking action-conditioned pre-training at scale.
+          </p>
+        </div>
+
+        <!-- MEDIA SLOT: overview-heatmap -> MECKA / CAIP saliency heatmap figure (Figure 1, left) -->
+        <figure class="figure">
+          <div class="media-placeholder ratio-21x9" data-slot="overview-heatmap">
+            <span class="ph-label">CAIP saliency heatmap figure</span>
+            <span class="ph-path">static/figures/saliency_heatmap.png &nbsp;(MECKA / Fig. 1 left)</span>
+          </div>
+          <figcaption>
+            Each encoder&rsquo;s saliency under its natural query mechanism. SigLIP attends to high-level
+            semantics and DINOv2 to visual structure, but neither focuses on action-relevant regions. CAIP
+            produces <strong>manipulation-centric</strong> features concentrated on the hands and the objects
+            they interact with.
+          </figcaption>
+        </figure>
+
+        <!-- Headline metric strip -->
+        <div class="stat-strip">
+          <div class="stat"><div class="stat-num">32,041 h</div><div class="stat-lbl">Egocentric human video</div></div>
+          <div class="stat"><div class="stat-num">88 h</div><div class="stat-lbl">Robot manipulation data</div></div>
+          <div class="stat stat-accent"><div class="stat-num">76%</div><div class="stat-lbl">Avg. real-world success</div></div>
+          <div class="stat"><div class="stat-num">+30 pts</div><div class="stat-lbl">Over best baseline</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ METHOD ============================ -->
+    <section id="method" class="section section-alt">
+      <div class="container">
+        <p class="section-eyebrow">Method</p>
+        <h2 class="section-title">Aligning vision and action by contrast</h2>
+
+        <div class="prose">
+          <p>
+            CAIP uses three encoders &mdash; <strong>vision</strong>, <strong>language</strong>, and
+            <strong>action</strong>. A ViT-L/16 image tower and a 24-layer text tower (initialized from SigLIP&nbsp;2)
+            produce patch and token features; a lightweight 4-layer action transformer encodes a chunk of future
+            hand motion into a single embedding via a <code>[CLS]</code> token. We attention-pool patch tokens
+            using text tokens as queries, then pool again with a learnable query to form a
+            <strong>text-conditioned image embedding</strong>. This embedding and the action embedding are
+            aligned with a <strong>SigLIP-style sigmoid contrastive loss</strong>.
+          </p>
+        </div>
+
+        <!-- MEDIA SLOT: method-architecture -> Figure 2 architecture diagram -->
+        <figure class="figure">
+          <div class="media-placeholder ratio-21x9" data-slot="method-architecture">
+            <span class="ph-label">CAIP architecture diagram</span>
+            <span class="ph-path">static/figures/architecture.png &nbsp;(Fig. 2)</span>
+          </div>
+          <figcaption>
+            <strong>CAIP architecture.</strong> A ViT encodes image patches and a text transformer encodes
+            language tokens, while an action transformer encodes a <em>T</em>-step action chunk into a single
+            embedding. Two stages of attention pooling produce a text-conditioned image embedding, which is
+            aligned to the action embedding via a sigmoid contrastive loss.
+          </figcaption>
+        </figure>
+
+        <div class="cards">
+          <div class="card">
+            <h3>Hand poses as actions</h3>
+            <p>
+              Each hand is represented by 21 keypoints as SE(3) transforms (MANO convention). Action chunks
+              emulate end-effector delta control over <em>T</em>&nbsp;=&nbsp;64 steps &mdash; roughly two seconds
+              of future motion at 30&nbsp;Hz &mdash; aligning naturally with robot action spaces.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Scale from human video</h3>
+            <p>
+              Training spans ~1,000 h of lab data (with wrist views), ~31,000 h of in-the-wild egocentric video,
+              and ~88 h of tabletop humanoid data for embodiment diversity &mdash; far beyond what robot datasets
+              alone can offer.
+            </p>
+          </div>
+          <div class="card">
+            <h3>A modular, frozen backbone</h3>
+            <p>
+              The pre-trained encoder transfers to a closed-loop policy: a decoder-only transformer
+              (Qwen3.5-0.8B) trained from scratch with a flow-matching action head, on top of frozen CAIP
+              features.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ RESULTS (TABBED) ============================ -->
+    <section id="results" class="section">
+      <div class="container">
+        <p class="section-eyebrow">Experiments</p>
+        <h2 class="section-title">Results</h2>
+
+        <div class="tabs" role="tablist" aria-label="Results">
+          <button class="tab is-active" role="tab" aria-selected="true" data-tab="main">Main Results</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="sim">Sim Results</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="robustness">Robustness</button>
+        </div>
+
+        <!-- ---------- MAIN RESULTS ---------- -->
+        <div class="tab-panel is-active" role="tabpanel" data-panel="main">
+          <p class="prose">
+            Across six real-world dexterous tasks on a Dexmate Vega bimanual robot with two 22-DoF Sharpa Wave
+            hands (12 trials each), CAIP reaches the highest average success rate &mdash; <strong>76.0%</strong>,
+            over 30 points above the strongest baseline &mdash; and tops 5 of 6 tasks. Baselines are competitive
+            on some tasks but collapse on others; CAIP stays strong across the board.
+          </p>
+
+          <div class="table-wrap">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th class="th-method">Method</th>
+                  <th>Fold Shorts</th>
+                  <th>Pour</th>
+                  <th>Pick Fruits</th>
+                  <th>Dispense Soap</th>
+                  <th>Turn On Lamp</th>
+                  <th>Pull Tissue</th>
+                  <th class="th-avg">Avg.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="th-method">R3M</td><td>14.6</td><td>12.5</td><td>2.1</td><td>29.2</td><td>8.3</td><td>37.5</td><td class="th-avg">17.4</td></tr>
+                <tr><td class="th-method">Qwen3.5 ViT</td><td>27.1</td><td>22.9</td><td>60.4</td><td>72.9</td><td>8.3</td><td>12.5</td><td class="th-avg">34.0</td></tr>
+                <tr><td class="th-method">VideoMAE</td><td>22.9</td><td>52.1</td><td>0.0</td><td>37.5</td><td>25.0</td><td>18.8</td><td class="th-avg">26.0</td></tr>
+                <tr><td class="th-method">VC-1</td><td>18.8</td><td>56.3</td><td>0.0</td><td>62.5</td><td>0.0</td><td>22.9</td><td class="th-avg">26.7</td></tr>
+                <tr><td class="th-method">MVP</td><td>54.2</td><td>62.5</td><td>2.1</td><td><u>93.8</u></td><td>8.3</td><td>31.3</td><td class="th-avg">42.0</td></tr>
+                <tr><td class="th-method">DINOv2</td><td>22.9</td><td><u>81.3</u></td><td>52.1</td><td>50.0</td><td>25.0</td><td>20.8</td><td class="th-avg">42.0</td></tr>
+                <tr><td class="th-method">SigLIP</td><td>12.5</td><td>70.8</td><td>37.5</td><td>83.3</td><td>25.0</td><td>25.0</td><td class="th-avg">42.4</td></tr>
+                <tr><td class="th-method">SigLIP 2</td><td>4.2</td><td>35.4</td><td>52.1</td><td><u>93.8</u></td><td><u>50.0</u></td><td>25.0</td><td class="th-avg"><u>43.4</u></td></tr>
+                <tr class="row-ours"><td class="th-method">CAIP (Ours)</td><td><b>68.8</b></td><td><b>83.3</b></td><td><b>56.3</b></td><td><b>100.0</b></td><td><b>75.0</b></td><td><b>72.9</b></td><td class="th-avg"><b>76.0</b></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note">Success rates (%) over 12 trials per task. <b>Bold</b> = best, <u>underline</u> = second best.</p>
+
+          <!-- MEDIA SLOT: results-barchart -> Figure 1 (right) downstream policy bar chart (optional) -->
+          <figure class="figure figure-narrow">
+            <div class="media-placeholder ratio-4x3" data-slot="results-barchart">
+              <span class="ph-label">Downstream policy performance (bar chart)</span>
+              <span class="ph-path">static/figures/policy_barchart.png &nbsp;(Fig. 1 right)</span>
+            </div>
+            <figcaption>Average success rate by encoder. CAIP (76%) roughly doubles the strongest baseline.</figcaption>
+          </figure>
+        </div>
+
+        <!-- ---------- SIM RESULTS ---------- -->
+        <div class="tab-panel" role="tabpanel" data-panel="sim" hidden>
+          <p class="prose">
+            <!-- TODO: confirm with authors what belongs here. The current draft does not include a dedicated
+                 simulation benchmark; this tab is reserved for sim-evaluation results / figures. -->
+            Simulation evaluation results.
+          </p>
+          <figure class="figure">
+            <div class="media-placeholder ratio-16x9" data-slot="sim-results">
+              <span class="ph-label">Sim results figure / table</span>
+              <span class="ph-path">static/figures/sim_results.png</span>
+            </div>
+            <figcaption>Simulation benchmark results. <em>(Content pending &mdash; confirm source.)</em></figcaption>
+          </figure>
+        </div>
+
+        <!-- ---------- ROBUSTNESS ---------- -->
+        <div class="tab-panel" role="tabpanel" data-panel="robustness" hidden>
+          <p class="prose">
+            Policies are trained only under standard conditions, so any change in success rate reflects the
+            visual representation&rsquo;s sensitivity to perturbation. CAIP is the most robust encoder under
+            <strong>every</strong> lighting and distractor perturbation we test.
+          </p>
+
+          <h3 class="subhead">Lighting variation</h3>
+          <div class="table-wrap">
+            <table class="results-table compact">
+              <thead>
+                <tr>
+                  <th class="th-method" rowspan="2">Encoder</th>
+                  <th colspan="3">Turn on Lamp</th>
+                  <th colspan="3">Dispense Soap</th>
+                  <th colspan="3">Fold Shorts</th>
+                  <th colspan="3" class="th-avg">Average</th>
+                </tr>
+                <tr>
+                  <th>Orig.</th><th>Light</th><th>Dark</th>
+                  <th>Orig.</th><th>Light</th><th>Dark</th>
+                  <th>Orig.</th><th>Light</th><th>Dark</th>
+                  <th class="th-avg">Orig.</th><th class="th-avg">Light</th><th class="th-avg">Dark</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="th-method">Qwen3.5 ViT</td><td>8.3</td><td>0.0</td><td>16.7</td><td>72.9</td><td>58.3</td><td>56.3</td><td>27.1</td><td>8.3</td><td>0.0</td><td class="th-avg">36.1</td><td class="th-avg">22.2</td><td class="th-avg">24.3</td></tr>
+                <tr><td class="th-method">MVP</td><td>8.3</td><td>0.0</td><td>8.3</td><td>93.8</td><td>8.3</td><td>39.6</td><td>54.2</td><td>8.3</td><td>4.2</td><td class="th-avg">52.1</td><td class="th-avg">5.6</td><td class="th-avg">17.4</td></tr>
+                <tr class="row-ours"><td class="th-method">CAIP (Ours)</td><td><b>75.0</b></td><td><b>25.0</b></td><td><b>33.3</b></td><td><b>100.0</b></td><td><b>93.8</b></td><td><b>75.0</b></td><td><b>68.8</b></td><td><b>35.4</b></td><td><b>20.8</b></td><td class="th-avg"><b>81.3</b></td><td class="th-avg"><b>51.4</b></td><td class="th-avg"><b>43.1</b></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="subhead">Distractor objects</h3>
+          <div class="table-wrap">
+            <table class="results-table compact">
+              <thead>
+                <tr>
+                  <th class="th-method" rowspan="2">Encoder</th>
+                  <th colspan="2">Turn on Lamp</th>
+                  <th colspan="2">Dispense Soap</th>
+                  <th colspan="2">Fold Shorts</th>
+                  <th colspan="2" class="th-avg">Average</th>
+                </tr>
+                <tr>
+                  <th>Orig.</th><th>2 Distr.</th>
+                  <th>Orig.</th><th>2 Distr.</th>
+                  <th>Orig.</th><th>2 Distr.</th>
+                  <th class="th-avg">Orig.</th><th class="th-avg">2 Distr.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="th-method">Qwen3.5 ViT</td><td>8.3</td><td>8.3</td><td>72.9</td><td>60.4</td><td>27.1</td><td>16.7</td><td class="th-avg">36.1</td><td class="th-avg">28.5</td></tr>
+                <tr><td class="th-method">MVP</td><td>8.3</td><td>0.0</td><td>93.8</td><td>12.5</td><td>54.2</td><td>16.7</td><td class="th-avg">52.1</td><td class="th-avg">9.7</td></tr>
+                <tr class="row-ours"><td class="th-method">CAIP (Ours)</td><td><b>75.0</b></td><td><b>33.0</b></td><td><b>100.0</b></td><td><b>85.4</b></td><td><b>68.8</b></td><td><b>39.6</b></td><td class="th-avg"><b>81.3</b></td><td class="th-avg"><b>52.8</b></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note">Success rates (%). Policies trained only under original conditions. <b>Bold</b> = best.</p>
+
+          <div class="robustness-media">
+            <figure class="figure">
+              <div class="media-placeholder ratio-16x9" data-slot="robustness-lighting">
+                <span class="ph-label">Lighting conditions</span>
+                <span class="ph-path">static/figures/lighting_shorts_figure.png</span>
+              </div>
+              <figcaption>Normal, Light, and Dark conditions for the Fold Shorts task.</figcaption>
+            </figure>
+            <figure class="figure">
+              <div class="media-placeholder ratio-16x9" data-slot="robustness-distractor">
+                <span class="ph-label">Distractor objects</span>
+                <span class="ph-path">static/figures/distractor_lamp_figure.png</span>
+              </div>
+              <figcaption>Scene without and with distractor objects for the Turn On Lamp task.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ DEMOS ============================ -->
+    <section id="demos" class="section section-alt">
+      <div class="container">
+        <p class="section-eyebrow">Rollouts</p>
+        <h2 class="section-title">Real-world task demonstrations</h2>
+        <p class="prose">
+          Closed-loop rollouts of CAIP-conditioned policies across the six evaluation tasks on the Dexmate Vega
+          with Sharpa Wave dexterous hands.
+        </p>
+
+        <!-- Optional: single merged grid video instead of / in addition to the grid below -->
+        <!-- MEDIA SLOT: demos-grid-video -> static/videos/merged_grid.mp4 -->
+
+        <div class="demo-grid">
+          <!-- MEDIA SLOTS: demo-* -> static/videos/<task>.mp4 -->
+          <figure class="demo-item">
+            <div class="media-placeholder ratio-1x1" data-slot="demo-fold-shorts"><span class="ph-label">Fold Shorts</span><span class="ph-path">static/videos/fold_shorts.mp4</span></div>
+            <figcaption>Fold Shorts</figcaption>
+          </figure>
+          <figure class="demo-item">
+            <div class="media-placeholder ratio-1x1" data-slot="demo-pour"><span class="ph-label">Pour</span><span class="ph-path">static/videos/pour_almonds.mp4</span></div>
+            <figcaption>Pour Almonds</figcaption>
+          </figure>
+          <figure class="demo-item">
+            <div class="media-placeholder ratio-1x1" data-slot="demo-pick-fruits"><span class="ph-label">Pick Fruits</span><span class="ph-path">static/videos/pick_fruits.mp4</span></div>
+            <figcaption>Pick Fruits</figcaption>
+          </figure>
+          <figure class="demo-item">
+            <div class="media-placeholder ratio-1x1" data-slot="demo-dispense-soap"><span class="ph-label">Dispense Soap</span><span class="ph-path">static/videos/dispense_soap.mp4</span></div>
+            <figcaption>Dispense Soap</figcaption>
+          </figure>
+          <figure class="demo-item">
+            <div class="media-placeholder ratio-1x1" data-slot="demo-turn-on-lamp"><span class="ph-label">Turn On Lamp</span><span class="ph-path">static/videos/turn_on_lamp.mp4</span></div>
+            <figcaption>Turn On Lamp</figcaption>
+          </figure>
+          <figure class="demo-item">
+            <div class="media-placeholder ratio-1x1" data-slot="demo-pull-tissue"><span class="ph-label">Pull Tissue</span><span class="ph-path">static/videos/pull_tissue.mp4</span></div>
+            <figcaption>Pull Tissue</figcaption>
+          </figure>
+        </div>
+
+        <!-- Task progression strips -->
+        <h3 class="subhead">Task progressions</h3>
+        <figure class="figure">
+          <div class="media-placeholder ratio-21x9" data-slot="progression-strip">
+            <span class="ph-label">Task progression filmstrips</span>
+            <span class="ph-path">static/figures/*_progression.png</span>
+          </div>
+          <figcaption>Keyframe progressions of successful CAIP rollouts across tasks.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============================ ANALYSIS: HEATMAPS / FAILURES ============================ -->
+    <section id="analysis" class="section">
+      <div class="container">
+        <p class="section-eyebrow">Analysis</p>
+        <h2 class="section-title">What the encoders attend to</h2>
+        <p class="prose">
+          Side-by-side rollouts with attention heatmaps reveal <em>why</em> semantic and self-supervised
+          encoders fall short. DINOv2 and SigLIP&nbsp;2 spread attention across the scene or fixate on
+          semantically salient but action-irrelevant regions; CAIP concentrates on the hands and the objects
+          being manipulated, which translates into more reliable closed-loop behavior.
+        </p>
+
+        <div class="compare-grid">
+          <figure class="demo-item">
+            <div class="media-placeholder ratio-1x1" data-slot="heatmap-ours"><span class="ph-label">CAIP (Ours)</span><span class="ph-path">static/videos/ours_heatmap.mp4</span></div>
+            <figcaption>CAIP (Ours)</figcaption>
+          </figure>
+          <figure class="demo-item">
+            <div class="media-placeholder ratio-1x1" data-slot="heatmap-dinov2"><span class="ph-label">DINOv2</span><span class="ph-path">static/videos/dinov2_heatmap.mp4</span></div>
+            <figcaption>DINOv2</figcaption>
+          </figure>
+          <figure class="demo-item">
+            <div class="media-placeholder ratio-1x1" data-slot="heatmap-siglip2"><span class="ph-label">SigLIP 2</span><span class="ph-path">static/videos/siglip2_heatmap.mp4</span></div>
+            <figcaption>SigLIP 2</figcaption>
+          </figure>
+        </div>
+
+        <h3 class="subhead">Failure modes</h3>
+        <figure class="figure">
+          <div class="media-placeholder ratio-16x9" data-slot="failures">
+            <span class="ph-label">Baseline failure comparisons</span>
+            <span class="ph-path">static/videos/*_lamp.mp4 / *_pour.mp4 comparisons</span>
+          </div>
+          <figcaption>
+            Representative failures of DINOv2 and SigLIP&nbsp;2 policies compared with CAIP on the same task and
+            initial conditions.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============================ ABLATIONS ============================ -->
+    <section id="ablations" class="section section-alt">
+      <div class="container">
+        <p class="section-eyebrow">Ablations</p>
+        <h2 class="section-title">Scaling the vision encoder</h2>
+        <p class="prose">
+          We scale the backbone across ViT-B, ViT-L, and ViT-SO400M on three manipulation tasks. Increasing
+          encoder capacity yields substantial gains, with the <strong>ViT-B&nbsp;&rarr;&nbsp;ViT-L</strong>
+          transition giving the largest average jump (over 30%). We adopt <strong>ViT-L</strong> as the primary
+          encoder for the best trade-off between performance, model size, and inference speed.
+        </p>
+
+        <div class="ablation-grid">
+          <figure class="figure">
+            <div class="media-placeholder ratio-4x3" data-slot="ablation-capacity">
+              <span class="ph-label">Capacity scaling (ViT-B / L / SO400M)</span>
+              <span class="ph-path">static/figures/ablation_capacity.png</span>
+            </div>
+            <figcaption>Model-capacity scaling across three tasks.</figcaption>
+          </figure>
+          <figure class="figure">
+            <div class="media-placeholder ratio-4x3" data-slot="ablation-data">
+              <span class="ph-label">Data scaling</span>
+              <span class="ph-path">static/figures/ablation_data.png</span>
+            </div>
+            <figcaption>Pre-training data scaling.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ BIBTEX ============================ -->
+    <section id="bibtex" class="section">
+      <div class="container">
+        <p class="section-eyebrow">Citation</p>
+        <h2 class="section-title">BibTeX</h2>
+        <div class="bibtex-card">
+          <pre><code>@misc{caip2026,
+  title  = {Contrastive Action-Image Pre-training for Visuomotor Control},
+  author = {Sharma, Yuvan and Niu, Dantong and Pai, Anirudh and others},
+  year   = {2026},
+  note   = {Citation coming soon}
+}</code></pre>
+          <button class="copy-btn" id="copy-bibtex" type="button">Copy</button>
+        </div>
+        <p class="table-note">Full author list and arXiv identifier coming soon.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================ FOOTER ============================ -->
+  <footer class="footer">
+    <div class="container">
+      <p>
+        UC Berkeley &middot; NVIDIA &middot; Sapienza University of Rome &middot; Panasonic
+      </p>
+      <p class="footer-fine">
+        Website template is free to reuse. Page built for the CAIP project page.
+      </p>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
