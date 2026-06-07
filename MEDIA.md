@@ -25,9 +25,22 @@ All transcoded to H.264 / yuv420p / faststart, muted, web-friendly (`ffmpeg -crf
 | `robustness-distractor` | Results · Robustness | `static/figures/distractor_lamp_figure.png` | `caip_media/robustness/distractor_lamp/distractor_lamp_figure.png` |
 
 ## Notes
-- **Encoder comparison** is built as a live HTML grid (not a baked video). Each task shows the 3 encoder
-  rollouts; the black cell below each is reserved for that encoder's attention heatmap. When heatmaps exist,
-  drop them in and replace the `.heatmap-ph` divs with `<video>` elements.
+- **Encoder comparison** is a live HTML matrix (rows = side / head cam / heatmap; cols = encoders).
+  The head cam + (future) heatmap share a recording so are already synced; the **side view** is a separate
+  phone recording aligned to the head cam by cross-correlating motion energy, then trimmed to the head's
+  window so the two loop in sync. Heatmap row = black placeholders until heatmaps exist (drop in and replace
+  the `.heatmap-ph` divs with `<video>`).
+- **Side-view sync offsets** (start second in the original `side.MOV`, length = head-cam duration). To
+  fine-tune, re-run the trim with adjusted `-ss`/`-t`:
+  | cell | side start | length |
+  |------|-----------|--------|
+  | lamp/caip | 1.30 | 14.30 |
+  | lamp/dinov2 | 12.70 | 11.90 |
+  | lamp/siglip2 | 0.80 | 13.40 |
+  | pour/caip | 0.80 | 25.90 |
+  | pour/dinov2 | 1.70 | 13.50 |
+  | pour/siglip2 | 0.20 | 16.70 |
+  (lamp aligned with high confidence; pour offsets are small — verify by eye and nudge if a cell looks off.)
 - Progression filmstrips were intentionally left out.
 - Re-transcode recipe: `ffmpeg -i in.mov -vf "scale='min(960,iw)':-2" -c:v libx264 -preset veryfast -crf 27 -pix_fmt yuv420p -movflags +faststart -an out.mp4`
 - Swap an image placeholder → `<img src="static/figures/NAME.png" alt="..." loading="lazy" />`
