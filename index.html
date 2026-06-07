@@ -301,17 +301,37 @@
         <!-- ---------- SIM RESULTS ---------- -->
         <div class="tab-panel" role="tabpanel" data-panel="sim" hidden>
           <p class="prose">
-            <!-- TODO: confirm with authors what belongs here. The current draft does not include a dedicated
-                 simulation benchmark; this tab is reserved for sim-evaluation results / figures. -->
-            Simulation evaluation results.
+            To test transfer beyond the embodiment and domain CAIP was trained for, we evaluate on the
+            <strong>ManiSkill2</strong> Franka benchmark &mdash; a single 7-DoF arm with a parallel-jaw gripper
+            on tabletop tasks. This is a large shift from CAIP&rsquo;s egocentric, dexterous, bimanual
+            pre-training: different embodiment, action space, and visual domain (simulation vs. real video).
+            We keep the same protocol &mdash; frozen encoder, policy trained from scratch on 200 demonstrations
+            per task, 12 trials each. <strong>Despite the domain gap, CAIP again achieves the highest average
+            success rate (77.8%)</strong>, ahead of SigLIP&nbsp;2 (72.2%) and DINOv2 (69.4%).
           </p>
-          <figure class="figure">
-            <div class="media-placeholder ratio-16x9" data-slot="sim-results">
-              <span class="ph-label">Sim results figure / table</span>
-              <span class="ph-path">static/figures/sim_results.png</span>
-            </div>
-            <figcaption>Simulation benchmark results. <em>(Content pending &mdash; confirm source.)</em></figcaption>
-          </figure>
+
+          <div class="table-wrap">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th class="th-method">Encoder</th>
+                  <th>Lift Peg</th>
+                  <th>Stack Cubes</th>
+                  <th>Push Cube</th>
+                  <th class="th-avg">Avg.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="th-method">VC-1</td><td>16.7</td><td>0.0</td><td><b>100.0</b></td><td class="th-avg">36.1</td></tr>
+                <tr><td class="th-method">R3M</td><td>25.0</td><td>16.7</td><td>91.7</td><td class="th-avg">44.4</td></tr>
+                <tr><td class="th-method">MVP</td><td>33.3</td><td>0.0</td><td><b>100.0</b></td><td class="th-avg">44.4</td></tr>
+                <tr><td class="th-method">DINOv2</td><td><u>58.3</u></td><td><u>50.0</u></td><td><b>100.0</b></td><td class="th-avg">69.4</td></tr>
+                <tr><td class="th-method">SigLIP 2</td><td><u>58.3</u></td><td><b>58.3</b></td><td><b>100.0</b></td><td class="th-avg"><u>72.2</u></td></tr>
+                <tr class="row-ours"><td class="th-method">CAIP (Ours)</td><td><b>75.0</b></td><td><b>58.3</b></td><td><b>100.0</b></td><td class="th-avg"><b>77.8</b></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note">ManiSkill2 Franka success rates (%) over 12 trials per task. <b>Bold</b> = best, <u>underline</u> = second best.</p>
         </div>
 
         <!-- ---------- ROBUSTNESS ---------- -->
@@ -482,8 +502,10 @@
             <span class="ph-path">static/videos/*_lamp.mp4 / *_pour.mp4 comparisons</span>
           </div>
           <figcaption>
-            Representative failures of DINOv2 and SigLIP&nbsp;2 policies compared with CAIP on the same task and
-            initial conditions.
+            Recurring failures reflect perceptual ambiguity rather than encoder-specific quirks. In
+            <strong>Pour</strong>, the policy sometimes begins pouring before the two (same-color) cups are
+            aligned; in <strong>Fold Shorts</strong>, it occasionally skips the second fold because the post-first-fold
+            scene resembles the completed state. Both modes appear across encoders, including CAIP.
           </figcaption>
         </figure>
       </div>
@@ -495,28 +517,63 @@
         <p class="section-eyebrow">Ablations</p>
         <h2 class="section-title">Scaling the vision encoder</h2>
         <p class="prose">
-          We scale the backbone across ViT-B, ViT-L, and ViT-SO400M on three manipulation tasks. Increasing
-          encoder capacity yields substantial gains, with the <strong>ViT-B&nbsp;&rarr;&nbsp;ViT-L</strong>
-          transition giving the largest average jump (over 30%). We adopt <strong>ViT-L</strong> as the primary
-          encoder for the best trade-off between performance, model size, and inference speed.
+          We ablate CAIP along two axes &mdash; <strong>encoder capacity</strong> and <strong>pre-training data
+          scale</strong> &mdash; under identical data, training, and optimization settings.
         </p>
 
-        <div class="ablation-grid">
-          <figure class="figure">
-            <div class="media-placeholder ratio-4x3" data-slot="ablation-capacity">
-              <span class="ph-label">Capacity scaling (ViT-B / L / SO400M)</span>
-              <span class="ph-path">static/figures/ablation_capacity.png</span>
-            </div>
-            <figcaption>Model-capacity scaling across three tasks.</figcaption>
-          </figure>
-          <figure class="figure">
-            <div class="media-placeholder ratio-4x3" data-slot="ablation-data">
-              <span class="ph-label">Data scaling</span>
-              <span class="ph-path">static/figures/ablation_data.png</span>
-            </div>
-            <figcaption>Pre-training data scaling.</figcaption>
-          </figure>
+        <h3 class="subhead">Capacity scaling</h3>
+        <p class="prose">
+          Scaling the backbone across ViT-B/16, ViT-L/16, and ViT-SO400M/16 improves performance consistently.
+          The largest jump is <strong>ViT-B&nbsp;&rarr;&nbsp;ViT-L</strong> (+33 points average), driven by the
+          harder tasks. ViT-SO400M adds only a few more points at a large compute cost, so we adopt
+          <strong>ViT-L</strong> as the primary encoder.
+        </p>
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th class="th-method">Task</th>
+                <th>ViT-B/16</th>
+                <th>ViT-L/16</th>
+                <th>ViT-SO400M/16</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="th-method">Turn On Lamp</td><td>16.7</td><td>75.0</td><td><b>83.3</b></td></tr>
+              <tr><td class="th-method">Fold Shorts</td><td>54.2</td><td>68.8</td><td><b>79.2</b></td></tr>
+              <tr><td class="th-method">Dispense Soap</td><td>72.9</td><td><b>100.0</b></td><td><b>100.0</b></td></tr>
+              <tr class="row-ours"><td class="th-method">Average</td><td>47.9</td><td>81.3</td><td><b>87.5</b></td></tr>
+            </tbody>
+          </table>
         </div>
+        <p class="table-note">Downstream success rates (%). <b>Bold</b> = best per row. ViT-L (used in all main experiments) shown for reference.</p>
+
+        <h3 class="subhead">Data scaling</h3>
+        <p class="prose">
+          Holding the encoder fixed at ViT-L/16 and varying the fraction of pre-training data, performance
+          improves <strong>monotonically</strong> &mdash; from 50.0% at 20% of the data to 77.8% at full scale,
+          with <strong>no sign of saturation</strong>. CAIP would likely keep benefiting from more egocentric
+          data. Evaluated on the ManiSkill2 Franka tasks.
+        </p>
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th class="th-method">Pre-training data</th>
+                <th>Lift Peg</th>
+                <th>Stack Cubes</th>
+                <th>Push Cube</th>
+                <th class="th-avg">Avg.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="th-method">20%</td><td>58.3</td><td>25.0</td><td>66.7</td><td class="th-avg">50.0</td></tr>
+              <tr><td class="th-method">50%</td><td>66.7</td><td>33.3</td><td>83.3</td><td class="th-avg">61.1</td></tr>
+              <tr class="row-ours"><td class="th-method">100%</td><td><b>75.0</b></td><td><b>58.3</b></td><td><b>100.0</b></td><td class="th-avg"><b>77.8</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">ManiSkill2 Franka success rates (%) over 12 trials per task. <b>Bold</b> = best per column.</p>
       </div>
     </section>
 
