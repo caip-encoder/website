@@ -28,7 +28,6 @@
         <a href="#overview">Overview</a>
         <a href="#method">Method</a>
         <a href="#results">Results</a>
-        <a href="#demos">Demos</a>
         <a href="#analysis">Analysis</a>
         <a href="#ablations">Ablations</a>
         <a href="#bibtex">BibTeX</a>
@@ -153,17 +152,15 @@
           </p>
         </div>
 
-        <!-- MEDIA SLOT: overview-heatmap -> MECKA / CAIP saliency heatmap figure (Figure 1, left) -->
-        <figure class="figure">
-          <div class="media-placeholder ratio-21x9" data-slot="overview-heatmap">
-            <span class="ph-label">CAIP saliency heatmap figure</span>
-            <span class="ph-path">static/figures/saliency_heatmap.png &nbsp;(MECKA / Fig. 1 left)</span>
-          </div>
+        <!-- MECKA: raw egocentric frames vs. CAIP saliency -->
+        <figure class="figure figure-square">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="static/videos/mecka_raw_vs_caip.mp4" type="video/mp4" />
+          </video>
           <figcaption>
-            Each encoder&rsquo;s saliency under its natural query mechanism. SigLIP attends to high-level
-            semantics and DINOv2 to visual structure, but neither focuses on action-relevant regions. CAIP
-            produces <strong>manipulation-centric</strong> features concentrated on the hands and the objects
-            they interact with.
+            CAIP saliency (overlaid) against the raw egocentric input across diverse scenes. Rather than
+            spreading attention across the frame, CAIP produces <strong>manipulation-centric</strong> features
+            concentrated on the hands and the objects they interact with.
           </figcaption>
         </figure>
 
@@ -296,6 +293,35 @@
             </div>
             <figcaption>Average success rate by encoder. CAIP (76%) roughly doubles the strongest baseline.</figcaption>
           </figure>
+
+          <h3 class="subhead">Policy rollouts</h3>
+          <p class="prose">Closed-loop rollouts of CAIP-conditioned policies across the six evaluation tasks on the Dexmate Vega with Sharpa Wave dexterous hands.</p>
+          <div class="demo-grid">
+            <figure class="demo-item">
+              <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/fold_shorts.mp4" type="video/mp4" /></video>
+              <figcaption>Fold Shorts</figcaption>
+            </figure>
+            <figure class="demo-item">
+              <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/pour_almonds.mp4" type="video/mp4" /></video>
+              <figcaption>Pour Almonds</figcaption>
+            </figure>
+            <figure class="demo-item">
+              <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/pick_fruits.mp4" type="video/mp4" /></video>
+              <figcaption>Pick Fruits</figcaption>
+            </figure>
+            <figure class="demo-item">
+              <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/dispense_soap.mp4" type="video/mp4" /></video>
+              <figcaption>Dispense Soap</figcaption>
+            </figure>
+            <figure class="demo-item">
+              <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/turn_on_lamp.mp4" type="video/mp4" /></video>
+              <figcaption>Turn On Lamp</figcaption>
+            </figure>
+            <figure class="demo-item">
+              <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/pull_tissue.mp4" type="video/mp4" /></video>
+              <figcaption>Pull Tissue</figcaption>
+            </figure>
+          </div>
         </div>
 
         <!-- ---------- SIM RESULTS ---------- -->
@@ -415,84 +441,56 @@
       </div>
     </section>
 
-    <!-- ============================ DEMOS ============================ -->
-    <section id="demos" class="section section-alt">
-      <div class="container">
-        <p class="section-eyebrow">Rollouts</p>
-        <h2 class="section-title">Real-world task demonstrations</h2>
-        <p class="prose">
-          Closed-loop rollouts of CAIP-conditioned policies across the six evaluation tasks on the Dexmate Vega
-          with Sharpa Wave dexterous hands.
-        </p>
-
-        <!-- Optional: single merged grid video instead of / in addition to the grid below -->
-        <!-- MEDIA SLOT: demos-grid-video -> static/videos/merged_grid.mp4 -->
-
-        <div class="demo-grid">
-          <!-- MEDIA SLOTS: demo-* -> static/videos/<task>.mp4 -->
-          <figure class="demo-item">
-            <div class="media-placeholder ratio-1x1" data-slot="demo-fold-shorts"><span class="ph-label">Fold Shorts</span><span class="ph-path">static/videos/fold_shorts.mp4</span></div>
-            <figcaption>Fold Shorts</figcaption>
-          </figure>
-          <figure class="demo-item">
-            <div class="media-placeholder ratio-1x1" data-slot="demo-pour"><span class="ph-label">Pour</span><span class="ph-path">static/videos/pour_almonds.mp4</span></div>
-            <figcaption>Pour Almonds</figcaption>
-          </figure>
-          <figure class="demo-item">
-            <div class="media-placeholder ratio-1x1" data-slot="demo-pick-fruits"><span class="ph-label">Pick Fruits</span><span class="ph-path">static/videos/pick_fruits.mp4</span></div>
-            <figcaption>Pick Fruits</figcaption>
-          </figure>
-          <figure class="demo-item">
-            <div class="media-placeholder ratio-1x1" data-slot="demo-dispense-soap"><span class="ph-label">Dispense Soap</span><span class="ph-path">static/videos/dispense_soap.mp4</span></div>
-            <figcaption>Dispense Soap</figcaption>
-          </figure>
-          <figure class="demo-item">
-            <div class="media-placeholder ratio-1x1" data-slot="demo-turn-on-lamp"><span class="ph-label">Turn On Lamp</span><span class="ph-path">static/videos/turn_on_lamp.mp4</span></div>
-            <figcaption>Turn On Lamp</figcaption>
-          </figure>
-          <figure class="demo-item">
-            <div class="media-placeholder ratio-1x1" data-slot="demo-pull-tissue"><span class="ph-label">Pull Tissue</span><span class="ph-path">static/videos/pull_tissue.mp4</span></div>
-            <figcaption>Pull Tissue</figcaption>
-          </figure>
-        </div>
-
-        <!-- Task progression strips -->
-        <h3 class="subhead">Task progressions</h3>
-        <figure class="figure">
-          <div class="media-placeholder ratio-21x9" data-slot="progression-strip">
-            <span class="ph-label">Task progression filmstrips</span>
-            <span class="ph-path">static/figures/*_progression.png</span>
-          </div>
-          <figcaption>Keyframe progressions of successful CAIP rollouts across tasks.</figcaption>
-        </figure>
-      </div>
-    </section>
-
     <!-- ============================ ANALYSIS: HEATMAPS / FAILURES ============================ -->
     <section id="analysis" class="section">
       <div class="container">
         <p class="section-eyebrow">Analysis</p>
         <h2 class="section-title">What the encoders attend to</h2>
         <p class="prose">
-          Side-by-side rollouts with attention heatmaps reveal <em>why</em> semantic and self-supervised
-          encoders fall short. DINOv2 and SigLIP&nbsp;2 spread attention across the scene or fixate on
-          semantically salient but action-irrelevant regions; CAIP concentrates on the hands and the objects
-          being manipulated, which translates into more reliable closed-loop behavior.
+          Side-by-side rollouts compare CAIP against DINOv2 and SigLIP&nbsp;2 on the same task and initial
+          conditions. The bottom row is reserved for each encoder&rsquo;s <strong>attention heatmap</strong>
+          &mdash; computed via its natural query mechanism &mdash; which we will add to visualize where each model
+          looks during manipulation.
         </p>
 
-        <div class="compare-grid">
-          <figure class="demo-item">
-            <div class="media-placeholder ratio-1x1" data-slot="heatmap-ours"><span class="ph-label">CAIP (Ours)</span><span class="ph-path">static/videos/ours_heatmap.mp4</span></div>
-            <figcaption>CAIP (Ours)</figcaption>
-          </figure>
-          <figure class="demo-item">
-            <div class="media-placeholder ratio-1x1" data-slot="heatmap-dinov2"><span class="ph-label">DINOv2</span><span class="ph-path">static/videos/dinov2_heatmap.mp4</span></div>
-            <figcaption>DINOv2</figcaption>
-          </figure>
-          <figure class="demo-item">
-            <div class="media-placeholder ratio-1x1" data-slot="heatmap-siglip2"><span class="ph-label">SigLIP 2</span><span class="ph-path">static/videos/siglip2_heatmap.mp4</span></div>
-            <figcaption>SigLIP 2</figcaption>
-          </figure>
+        <!-- Turn On Lamp -->
+        <h3 class="subhead">Turn On Lamp</h3>
+        <div class="cmp-grid">
+          <div class="cmp-col">
+            <span class="cmp-label cmp-ours">CAIP (Ours)</span>
+            <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/ours.mp4" type="video/mp4" /></video>
+            <div class="heatmap-ph"><span>Attention heatmap &middot; coming soon</span></div>
+          </div>
+          <div class="cmp-col">
+            <span class="cmp-label">DINOv2</span>
+            <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/dinov2.mp4" type="video/mp4" /></video>
+            <div class="heatmap-ph"><span>Attention heatmap &middot; coming soon</span></div>
+          </div>
+          <div class="cmp-col">
+            <span class="cmp-label">SigLIP 2</span>
+            <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/siglip2.mp4" type="video/mp4" /></video>
+            <div class="heatmap-ph"><span>Attention heatmap &middot; coming soon</span></div>
+          </div>
+        </div>
+
+        <!-- Pour -->
+        <h3 class="subhead">Pour</h3>
+        <div class="cmp-grid">
+          <div class="cmp-col">
+            <span class="cmp-label cmp-ours">CAIP (Ours)</span>
+            <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/ours.mp4" type="video/mp4" /></video>
+            <div class="heatmap-ph"><span>Attention heatmap &middot; coming soon</span></div>
+          </div>
+          <div class="cmp-col">
+            <span class="cmp-label">DINOv2</span>
+            <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/dinov2.mp4" type="video/mp4" /></video>
+            <div class="heatmap-ph"><span>Attention heatmap &middot; coming soon</span></div>
+          </div>
+          <div class="cmp-col">
+            <span class="cmp-label">SigLIP 2</span>
+            <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/siglip2.mp4" type="video/mp4" /></video>
+            <div class="heatmap-ph"><span>Attention heatmap &middot; coming soon</span></div>
+          </div>
         </div>
 
         <h3 class="subhead">Failure modes</h3>

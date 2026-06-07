@@ -3,3 +3,6 @@
 Thumbs.db
 *.log
 .vscode/
+
+# Raw media staging area — source files only, processed outputs go in static/
+caip_media/

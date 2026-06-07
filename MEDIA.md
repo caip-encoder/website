@@ -1,49 +1,34 @@
 # Media manifest
 
-Every figure/video slot on the page is a `data-slot` placeholder in `index.html`.
-When you have a file, drop it into `static/` and tell me the slot → source mapping, or
-follow the swap recipe below. Candidate sources live in `~/Desktop/caip_media`.
+Status of every figure/video slot. Raw sources live in the git-ignored `caip_media/`
+staging folder; processed web assets live in `static/`.
 
-| Slot (`data-slot`)        | Section            | Target path in repo                  | Likely source in `~/Desktop/caip_media`                                  |
-|---------------------------|--------------------|--------------------------------------|--------------------------------------------------------------------------|
-| `teaser-video`            | Hero               | `static/videos/teaser.mp4`           | TBD (project overview cut)                                               |
-| `overview-heatmap`        | Overview           | `static/figures/saliency_heatmap.png`| `mecka_raw_vs_caip_3x2.mp4` (frame) / Fig. 1 left                        |
-| `method-architecture`     | Method             | `static/figures/architecture.png`    | Fig. 2 (from PDF)                                                        |
-| `results-barchart`        | Results · Main     | `static/figures/policy_barchart.png` | Fig. 1 right (from PDF)                                                  |
-| `sim-results`             | Results · Sim      | `static/figures/sim_results.png`     | TBD — confirm a sim benchmark exists                                    |
-| `robustness-lighting`     | Results · Robust.  | `static/figures/lighting_shorts_figure.png` | `robustness/lighting_shorts/lighting_shorts_figure.png`          |
-| `robustness-distractor`   | Results · Robust.  | `static/figures/distractor_lamp_figure.png` | `robustness/distractor_lamp/distractor_lamp_figure.png`          |
-| `demo-fold-shorts`        | Demos              | `static/videos/fold_shorts.mp4`      | `caip_demos/Fold_Shorts.mov` or `caip_demos/head_cam/fold_shorts__*.mp4`|
-| `demo-pour`               | Demos              | `static/videos/pour_almonds.mp4`     | `caip_demos/Pour_Almonds.mov`                                           |
-| `demo-pick-fruits`        | Demos              | `static/videos/pick_fruits.mp4`      | `caip_demos/Pick_Fruits.mov`                                            |
-| `demo-dispense-soap`      | Demos              | `static/videos/dispense_soap.mp4`    | `caip_demos/Dispense_Soap.mov`                                          |
-| `demo-turn-on-lamp`       | Demos              | `static/videos/turn_on_lamp.mp4`     | `caip_demos/Turn_On_Lamp.mov`                                           |
-| `demo-pull-tissue`        | Demos              | `static/videos/pull_tissue.mp4`      | `caip_demos/Pull_Tissue.mov`                                            |
-| `progression-strip`       | Demos              | `static/figures/*_progression.png`   | `paper_figures/*_progression.png`                                       |
-| `heatmap-ours`            | Analysis           | `static/videos/ours_heatmap.mp4`     | `comparison_demos/tissue_OLD/caip/head_heatmap.mp4`                     |
-| `heatmap-dinov2`          | Analysis           | `static/videos/dinov2_heatmap.mp4`   | `comparison_demos/tissue_OLD/dinov2/head_heatmap_dino.mp4`             |
-| `heatmap-siglip2`         | Analysis           | `static/videos/siglip2_heatmap.mp4`  | `comparison_demos/tissue_OLD/siglip2/head_heatmap_siglip2.mp4`         |
-| `failures`                | Analysis           | `static/videos/failures.mp4`         | `website_send_jun6/*_lamp.mp4`, `*_pour.mp4`                            |
-| `ablation-capacity`       | Ablations          | `static/figures/ablation_capacity.png`| TBD — ViT-B/L/SO400M scaling                                          |
-| `ablation-data`           | Ablations          | `static/figures/ablation_data.png`   | TBD — data scaling                                                      |
+## ✅ Ingested
 
-## Swap recipe (image)
-Replace the placeholder `<div class="media-placeholder ..." data-slot="X">...</div>` with:
-```html
-<img src="static/figures/NAME.png" alt="..." loading="lazy" />
-```
+| What | On page | Source → repo path |
+|------|---------|--------------------|
+| **Task rollouts** (6) | Results · Main Results | `caip_media/caip_demos/*.mov` → `static/videos/{fold_shorts,pour_almonds,pick_fruits,dispense_soap,turn_on_lamp,pull_tissue}.mp4` |
+| **MECKA raw-vs-CAIP saliency** | Overview | `caip_media/mecka_raw_vs_caip_3x2.mp4` → `static/videos/mecka_raw_vs_caip.mp4` |
+| **Encoder comparison rollouts** (lamp, pour × ours/dinov2/siglip2) | Analysis | `caip_media/comparison_demos/{lamp,pour}/{ours,dinov2,siglip2}.mp4` → `static/videos/comparison/{lamp,pour}/{ours,dinov2,siglip2}.mp4` |
 
-## Swap recipe (video)
-```html
-<video controls playsinline muted loop poster="static/figures/NAME_poster.jpg">
-  <source src="static/videos/NAME.mp4" type="video/mp4" />
-</video>
-```
-For autoplaying demo loops (no controls), use: `<video autoplay muted loop playsinline>`.
+All transcoded to H.264 / yuv420p / faststart, muted, web-friendly (`ffmpeg -crf 27`, width capped at 960). Demo grid plays autoplay+loop+muted.
+
+## ⏳ Still placeholders
+
+| Slot (`data-slot`) | Section | Target path | Likely source |
+|--------------------|---------|-------------|---------------|
+| `teaser-video` | Hero | `static/videos/teaser.mp4` | TBD — project overview cut (+ optional `narration.mp3`) |
+| `method-architecture` | Method | `static/figures/architecture.png` | Fig. 2 (PDF) |
+| `results-barchart` | Results · Main | `static/figures/policy_barchart.png` | Fig. 1 right (PDF) |
+| Analysis heatmap cells | Analysis | (black placeholders in `.heatmap-ph`) | **Not generated yet** — attention heatmaps for lamp/pour comparison rollouts |
+| `failures` | Analysis | `static/videos/failures.mp4` | TBD — Pour / Fold Shorts failure clips |
+| `robustness-lighting` | Results · Robustness | `static/figures/lighting_shorts_figure.png` | `caip_media/robustness/lighting_shorts/lighting_shorts_figure.png` |
+| `robustness-distractor` | Results · Robustness | `static/figures/distractor_lamp_figure.png` | `caip_media/robustness/distractor_lamp/distractor_lamp_figure.png` |
 
 ## Notes
-- Keep individual files reasonably small for GitHub Pages (ideally < 25 MB/video; compress `.MOV`→`.mp4`).
-  Example: `ffmpeg -i in.MOV -vcodec libx264 -crf 26 -vf scale=720:-2 -an out.mp4`
-- `.MOV` does not play in most browsers — convert to `.mp4` (H.264).
-- The narration (AI readover) audio goes in `static/videos/narration.mp3`; uncomment its `<source>`
-  in `index.html` and the "Play with narration" button auto-appears.
+- **Encoder comparison** is built as a live HTML grid (not a baked video). Each task shows the 3 encoder
+  rollouts; the black cell below each is reserved for that encoder's attention heatmap. When heatmaps exist,
+  drop them in and replace the `.heatmap-ph` divs with `<video>` elements.
+- Progression filmstrips were intentionally left out.
+- Re-transcode recipe: `ffmpeg -i in.mov -vf "scale='min(960,iw)':-2" -c:v libx264 -preset veryfast -crf 27 -pix_fmt yuv420p -movflags +faststart -an out.mp4`
+- Swap an image placeholder → `<img src="static/figures/NAME.png" alt="..." loading="lazy" />`
