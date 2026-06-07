@@ -447,65 +447,60 @@
         <p class="section-eyebrow">Analysis</p>
         <h2 class="section-title">What the encoders attend to</h2>
         <p class="prose">
-          Side-by-side rollouts compare CAIP against DINOv2 and SigLIP&nbsp;2 on the same task and initial
-          conditions. The bottom row is reserved for each encoder&rsquo;s <strong>attention heatmap</strong>
-          &mdash; computed via its natural query mechanism &mdash; which we will add to visualize where each model
-          looks during manipulation.
+          Side-by-side rollouts compare CAIP against DINOv2 and SigLIP&nbsp;2 on the same task. Each encoder is
+          shown from a <strong>side view</strong> and the robot&rsquo;s <strong>head camera</strong>; the bottom
+          row is reserved for each encoder&rsquo;s <strong>attention heatmap</strong> &mdash; computed via its
+          natural query mechanism &mdash; which we will add to visualize where each model looks during
+          manipulation.
         </p>
 
         <!-- Turn On Lamp -->
         <h3 class="subhead">Turn On Lamp</h3>
-        <div class="cmp-grid">
-          <div class="cmp-col">
-            <span class="cmp-label cmp-ours">CAIP (Ours)</span>
-            <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/ours.mp4" type="video/mp4" /></video>
-            <div class="heatmap-ph"><span>Attention heatmap &middot; coming soon</span></div>
-          </div>
-          <div class="cmp-col">
-            <span class="cmp-label">DINOv2</span>
-            <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/dinov2.mp4" type="video/mp4" /></video>
-            <div class="heatmap-ph"><span>Attention heatmap &middot; coming soon</span></div>
-          </div>
-          <div class="cmp-col">
-            <span class="cmp-label">SigLIP 2</span>
-            <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/siglip2.mp4" type="video/mp4" /></video>
-            <div class="heatmap-ph"><span>Attention heatmap &middot; coming soon</span></div>
-          </div>
+        <div class="cmp-matrix">
+          <div class="cmp-corner"></div>
+          <div class="cmp-head cmp-ours">CAIP (Ours)</div>
+          <div class="cmp-head">DINOv2</div>
+          <div class="cmp-head">SigLIP&nbsp;2</div>
+
+          <div class="cmp-rowlabel">Side view</div>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/caip_side.mp4" type="video/mp4" /></video>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/dinov2_side.mp4" type="video/mp4" /></video>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/siglip2_side.mp4" type="video/mp4" /></video>
+
+          <div class="cmp-rowlabel">Head cam</div>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/caip_head.mp4" type="video/mp4" /></video>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/dinov2_head.mp4" type="video/mp4" /></video>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/siglip2_head.mp4" type="video/mp4" /></video>
+
+          <div class="cmp-rowlabel">Heatmap</div>
+          <div class="heatmap-ph"><span>coming soon</span></div>
+          <div class="heatmap-ph"><span>coming soon</span></div>
+          <div class="heatmap-ph"><span>coming soon</span></div>
         </div>
 
         <!-- Pour -->
         <h3 class="subhead">Pour</h3>
-        <div class="cmp-grid">
-          <div class="cmp-col">
-            <span class="cmp-label cmp-ours">CAIP (Ours)</span>
-            <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/ours.mp4" type="video/mp4" /></video>
-            <div class="heatmap-ph"><span>Attention heatmap &middot; coming soon</span></div>
-          </div>
-          <div class="cmp-col">
-            <span class="cmp-label">DINOv2</span>
-            <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/dinov2.mp4" type="video/mp4" /></video>
-            <div class="heatmap-ph"><span>Attention heatmap &middot; coming soon</span></div>
-          </div>
-          <div class="cmp-col">
-            <span class="cmp-label">SigLIP 2</span>
-            <video autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/siglip2.mp4" type="video/mp4" /></video>
-            <div class="heatmap-ph"><span>Attention heatmap &middot; coming soon</span></div>
-          </div>
-        </div>
+        <div class="cmp-matrix">
+          <div class="cmp-corner"></div>
+          <div class="cmp-head cmp-ours">CAIP (Ours)</div>
+          <div class="cmp-head">DINOv2</div>
+          <div class="cmp-head">SigLIP&nbsp;2</div>
 
-        <h3 class="subhead">Failure modes</h3>
-        <figure class="figure">
-          <div class="media-placeholder ratio-16x9" data-slot="failures">
-            <span class="ph-label">Baseline failure comparisons</span>
-            <span class="ph-path">static/videos/*_lamp.mp4 / *_pour.mp4 comparisons</span>
-          </div>
-          <figcaption>
-            Recurring failures reflect perceptual ambiguity rather than encoder-specific quirks. In
-            <strong>Pour</strong>, the policy sometimes begins pouring before the two (same-color) cups are
-            aligned; in <strong>Fold Shorts</strong>, it occasionally skips the second fold because the post-first-fold
-            scene resembles the completed state. Both modes appear across encoders, including CAIP.
-          </figcaption>
-        </figure>
+          <div class="cmp-rowlabel">Side view</div>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/caip_side.mp4" type="video/mp4" /></video>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/dinov2_side.mp4" type="video/mp4" /></video>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/siglip2_side.mp4" type="video/mp4" /></video>
+
+          <div class="cmp-rowlabel">Head cam</div>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/caip_head.mp4" type="video/mp4" /></video>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/dinov2_head.mp4" type="video/mp4" /></video>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/siglip2_head.mp4" type="video/mp4" /></video>
+
+          <div class="cmp-rowlabel">Heatmap</div>
+          <div class="heatmap-ph"><span>coming soon</span></div>
+          <div class="heatmap-ph"><span>coming soon</span></div>
+          <div class="heatmap-ph"><span>coming soon</span></div>
+        </div>
       </div>
     </section>
 
