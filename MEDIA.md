@@ -13,16 +13,18 @@ staging folder; processed web assets live in `static/`.
 
 All transcoded to H.264 / yuv420p / faststart, muted, web-friendly (`ffmpeg -crf 27`, width capped at 960). Demo grid plays autoplay+loop+muted.
 
+| **Architecture diagram** | Method | `arch_figure.pdf` → `static/figures/architecture.png` (rendered 3×, trimmed) |
+| **Robustness figures** | Results · Robustness | `caip_media/robustness/{lighting_shorts,distractor_lamp}/*_figure.png` → `static/figures/{lighting_shorts,distractor_lamp}.png` |
+
 ## ⏳ Still placeholders
 
 | Slot (`data-slot`) | Section | Target path | Likely source |
 |--------------------|---------|-------------|---------------|
 | `teaser-video` | Hero | `static/videos/teaser.mp4` | TBD — project overview cut (+ optional `narration.mp3`) |
 | `method-architecture` | Method | `static/figures/architecture.png` | Fig. 2 (PDF) |
-| `results-barchart` | Results · Main | `static/figures/policy_barchart.png` | Fig. 1 right (PDF) |
-| Analysis heatmap row | Analysis | (black `.heatmap-ph` cells) | **Not generated yet** — attention heatmaps for lamp/pour, per encoder |
-| `robustness-lighting` | Results · Robustness | `static/figures/lighting_shorts_figure.png` | `caip_media/robustness/lighting_shorts/lighting_shorts_figure.png` |
-| `robustness-distractor` | Results · Robustness | `static/figures/distractor_lamp_figure.png` | `caip_media/robustness/distractor_lamp/distractor_lamp_figure.png` |
+| Analysis heatmap row (lamp/pour) | Analysis | (black `.heatmap-ph` cells) | **Not generated yet** — attention heatmaps for lamp/pour, per encoder (tissue done) |
+
+(Policy bar chart removed — no figure; results table covers it.)
 
 ## Notes
 - **Encoder comparison** is a live HTML matrix (rows = side / head cam / heatmap; cols = encoders).
