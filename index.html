@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CAIP — Contrastive Action-Image Pre-training for Visuomotor Control</title>
+  <title>CAIP: Contrastive Action-Image Pre-training for Visuomotor Control</title>
   <meta name="description" content="CAIP is an action-centric vision encoder that learns manipulation-relevant visual representations from large-scale egocentric human video, using hand poses as a proxy for end-effector actions." />
 
   <!-- Open Graph -->
@@ -96,29 +96,10 @@
 
         <!-- ---------------------- TEASER VIDEO ---------------------- -->
         <figure class="hero-video">
-          <!-- MEDIA SLOT: teaser-video -> static/videos/teaser.mp4 -->
-          <div class="media-placeholder ratio-16x9" data-slot="teaser-video">
-            <span class="ph-label">Teaser video</span>
-            <span class="ph-path">static/videos/teaser.mp4</span>
-          </div>
-          <!--
-          When the file is available, replace the placeholder above with:
-          <video controls playsinline poster="static/figures/teaser_poster.jpg">
+          <video controls autoplay muted loop playsinline preload="metadata">
             <source src="static/videos/teaser.mp4" type="video/mp4" />
           </video>
-          -->
-          <figcaption class="video-caption">
-            <span>Project overview.</span>
-            <!-- Optional AI voiceover track. When ready, wire the audio file here. -->
-            <button class="narration-toggle" id="narration-toggle" type="button" hidden>
-              <span class="dot"></span> Play with narration
-            </button>
-          </figcaption>
         </figure>
-        <!-- Hidden narration audio (AI readover of the script). Unhide button in main.js when src is set. -->
-        <audio id="narration-audio" preload="none">
-          <!-- <source src="static/videos/narration.mp3" type="audio/mpeg" /> -->
-        </audio>
 
         <!-- ---------------------- TL;DR ---------------------- -->
         <p class="tldr">
@@ -126,7 +107,7 @@
           <em>action-centric</em> visual features from <strong>32,041 hours</strong> of egocentric human video by
           treating 3D hand poses as a proxy for end-effector actions, aligning vision and action through a
           contrastive objective. With only <strong>88 hours</strong> of robot data, CAIP reaches a
-          <strong>76%</strong> average success rate on real-world dexterous manipulation — over
+          <strong>76%</strong> average success rate on real-world dexterous manipulation, over
           <strong>30 points</strong> above the strongest vision-encoder baseline.
         </p>
       </div>
@@ -141,14 +122,14 @@
         <div class="prose">
           <p>
             Visual perception underpins robotic manipulation, yet the encoders that power modern policies were
-            never designed for physical interaction. Image&ndash;text models like CLIP and SigLIP capture
+            never designed for physical interaction. Image-text models like CLIP and SigLIP capture
             <strong>semantics</strong>; self-distilled models like DINOv2 capture fine-grained
             <strong>geometry</strong>. But neither sees manipulation environments during training, and neither
             receives <strong>action supervision</strong>. The result is a fundamental misalignment: strong
             scene understanding, but no action-centric structure for downstream control.
           </p>
           <p>
-            The most direct fix &mdash; pre-training on robot trajectories &mdash; runs into a wall: robot data
+            The most direct fix, pre-training on robot trajectories, runs into a wall: robot data
             is orders of magnitude smaller than internet-scale corpora. Egocentric human video, by contrast, is
             abundant and captures the same first-person viewpoint a head-mounted robot camera observes, with
             naturally co-occurring hand motion. <strong>CAIP turns human hand poses into a proxy for
@@ -186,7 +167,7 @@
 
         <div class="prose">
           <p>
-            CAIP uses three encoders &mdash; <strong>vision</strong>, <strong>language</strong>, and
+            CAIP uses three encoders: <strong>vision</strong>, <strong>language</strong>, and
             <strong>action</strong>. A ViT-L/16 image tower and a 24-layer text tower (initialized from SigLIP&nbsp;2)
             produce patch and token features; a lightweight 4-layer action transformer encodes a chunk of future
             hand motion into a single embedding via a <code>[CLS]</code> token. We attention-pool patch tokens
@@ -212,15 +193,15 @@
             <h3>Hand poses as actions</h3>
             <p>
               Each hand is represented by 21 keypoints as SE(3) transforms (MANO convention). Action chunks
-              emulate end-effector delta control over <em>T</em>&nbsp;=&nbsp;64 steps &mdash; roughly two seconds
-              of future motion at 30&nbsp;Hz &mdash; aligning naturally with robot action spaces.
+              emulate end-effector delta control over <em>T</em>&nbsp;=&nbsp;64 steps, roughly two seconds
+              of future motion at 30&nbsp;Hz, aligning naturally with robot action spaces.
             </p>
           </div>
           <div class="card">
             <h3>Scale from human video</h3>
             <p>
               Training spans ~1,000 h of lab data (with wrist views), ~31,000 h of in-the-wild egocentric video,
-              and ~88 h of tabletop humanoid data for embodiment diversity &mdash; far beyond what robot datasets
+              and ~88 h of tabletop humanoid data for embodiment diversity, far beyond what robot datasets
               alone can offer.
             </p>
           </div>
@@ -252,8 +233,8 @@
         <div class="tab-panel is-active" role="tabpanel" data-panel="main">
           <p class="prose">
             Across six real-world dexterous tasks on a Dexmate Vega bimanual robot with two 22-DoF Sharpa Wave
-            hands (12 trials each), CAIP reaches the highest average success rate &mdash; <strong>76.0%</strong>,
-            over 30 points above the strongest baseline &mdash; and tops 5 of 6 tasks. Baselines are competitive
+            hands (12 trials each), CAIP reaches the highest average success rate, <strong>76.0%</strong>,
+            over 30 points above the strongest baseline, and tops 5 of 6 tasks. Baselines are competitive
             on some tasks but collapse on others; CAIP stays strong across the board.
           </p>
 
@@ -320,10 +301,10 @@
         <div class="tab-panel" role="tabpanel" data-panel="sim" hidden>
           <p class="prose">
             To test transfer beyond the embodiment and domain CAIP was trained for, we evaluate on the
-            <strong>ManiSkill2</strong> Franka benchmark &mdash; a single 7-DoF arm with a parallel-jaw gripper
+            <strong>ManiSkill2</strong> Franka benchmark: a single 7-DoF arm with a parallel-jaw gripper
             on tabletop tasks. This is a large shift from CAIP&rsquo;s egocentric, dexterous, bimanual
             pre-training: different embodiment, action space, and visual domain (simulation vs. real video).
-            We keep the same protocol &mdash; frozen encoder, policy trained from scratch on 200 demonstrations
+            We keep the same protocol: frozen encoder, policy trained from scratch on 200 demonstrations
             per task, 12 trials each. <strong>Despite the domain gap, CAIP again achieves the highest average
             success rate (77.8%)</strong>, ahead of SigLIP&nbsp;2 (72.2%) and DINOv2 (69.4%).
           </p>
@@ -419,7 +400,7 @@
           </figure>
           <figure class="figure">
             <img src="static/figures/distractor_lamp.png" alt="Turn On Lamp scene without and with distractor objects" loading="lazy" />
-            <figcaption><strong>Distractors.</strong> The Turn On Lamp scene without (left) and with two distractor objects &mdash; a red book and a multi-colored Hanoi tower (right).</figcaption>
+            <figcaption><strong>Distractors.</strong> The Turn On Lamp scene without (left) and with two distractor objects: a red book and a multi-colored Hanoi tower (right).</figcaption>
           </figure>
         </div>
       </div>
@@ -433,8 +414,8 @@
         <p class="prose">
           Side-by-side rollouts compare CAIP against DINOv2 and SigLIP&nbsp;2 on the same task. Each encoder is
           shown from a <strong>side view</strong> and the robot&rsquo;s <strong>head camera</strong>, with an
-          <strong>attention heatmap</strong> &mdash; computed via each encoder&rsquo;s natural query mechanism
-          &mdash; showing where the model looks during manipulation. DINOv2 and SigLIP&nbsp;2 spread attention
+          <strong>attention heatmap</strong>, computed via each encoder&rsquo;s natural query mechanism,
+          showing where the model looks during manipulation. DINOv2 and SigLIP&nbsp;2 spread attention
           across the scene, while CAIP concentrates on the hands and the manipulated objects.
         </p>
 
@@ -518,8 +499,8 @@
         <p class="section-eyebrow">Ablations</p>
         <h2 class="section-title">Scaling the vision encoder</h2>
         <p class="prose">
-          We ablate CAIP along two axes &mdash; <strong>encoder capacity</strong> and <strong>pre-training data
-          scale</strong> &mdash; under identical data, training, and optimization settings.
+          We ablate CAIP along two axes: <strong>encoder capacity</strong> and <strong>pre-training data
+          scale</strong>, under identical data, training, and optimization settings.
         </p>
 
         <h3 class="subhead">Capacity scaling</h3>
@@ -552,7 +533,7 @@
         <h3 class="subhead">Data scaling</h3>
         <p class="prose">
           Holding the encoder fixed at ViT-L/16 and varying the fraction of pre-training data, performance
-          improves <strong>monotonically</strong> &mdash; from 50.0% at 20% of the data to 77.8% at full scale,
+          improves <strong>monotonically</strong>, from 50.0% at 20% of the data to 77.8% at full scale,
           with <strong>no sign of saturation</strong>. CAIP would likely keep benefiting from more egocentric
           data. Evaluated on the ManiSkill2 Franka tasks.
         </p>

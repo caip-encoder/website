@@ -20,8 +20,6 @@ All transcoded to H.264 / yuv420p / faststart, muted, web-friendly (`ffmpeg -crf
 
 | Slot (`data-slot`) | Section | Target path | Likely source |
 |--------------------|---------|-------------|---------------|
-| `teaser-video` | Hero | `static/videos/teaser.mp4` | TBD — project overview cut (+ optional `narration.mp3`) |
-| `method-architecture` | Method | `static/figures/architecture.png` | Fig. 2 (PDF) |
 | Analysis heatmap row (lamp/pour) | Analysis | (black `.heatmap-ph` cells) | **Not generated yet** — attention heatmaps for lamp/pour, per encoder (tissue done) |
 
 (Policy bar chart removed — no figure; results table covers it.)
