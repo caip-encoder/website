@@ -448,10 +448,10 @@
         <h2 class="section-title">What the encoders attend to</h2>
         <p class="prose">
           Side-by-side rollouts compare CAIP against DINOv2 and SigLIP&nbsp;2 on the same task. Each encoder is
-          shown from a <strong>side view</strong> and the robot&rsquo;s <strong>head camera</strong>; the bottom
-          row is reserved for each encoder&rsquo;s <strong>attention heatmap</strong> &mdash; computed via its
-          natural query mechanism &mdash; which we will add to visualize where each model looks during
-          manipulation.
+          shown from a <strong>side view</strong> and the robot&rsquo;s <strong>head camera</strong>, with an
+          <strong>attention heatmap</strong> &mdash; computed via each encoder&rsquo;s natural query mechanism
+          &mdash; showing where the model looks during manipulation. DINOv2 and SigLIP&nbsp;2 spread attention
+          across the scene, while CAIP concentrates on the hands and the manipulated objects.
         </p>
 
         <!-- Turn On Lamp -->
@@ -500,6 +500,30 @@
           <div class="heatmap-ph"><span>coming soon</span></div>
           <div class="heatmap-ph"><span>coming soon</span></div>
           <div class="heatmap-ph"><span>coming soon</span></div>
+        </div>
+
+        <!-- Pull Tissue (has attention heatmaps) -->
+        <h3 class="subhead">Pull Tissue</h3>
+        <div class="cmp-matrix">
+          <div class="cmp-corner"></div>
+          <div class="cmp-head cmp-ours">CAIP (Ours)</div>
+          <div class="cmp-head">DINOv2</div>
+          <div class="cmp-head">SigLIP&nbsp;2</div>
+
+          <div class="cmp-rowlabel">Side view</div>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/tissue/caip_side.mp4" type="video/mp4" /></video>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/tissue/dinov2_side.mp4" type="video/mp4" /></video>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/tissue/siglip2_side.mp4" type="video/mp4" /></video>
+
+          <div class="cmp-rowlabel">Head cam</div>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/tissue/caip_head.mp4" type="video/mp4" /></video>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/tissue/dinov2_head.mp4" type="video/mp4" /></video>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/tissue/siglip2_head.mp4" type="video/mp4" /></video>
+
+          <div class="cmp-rowlabel">Heatmap</div>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/tissue/caip_heatmap.mp4" type="video/mp4" /></video>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/tissue/dinov2_heatmap.mp4" type="video/mp4" /></video>
+          <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/tissue/siglip2_heatmap.mp4" type="video/mp4" /></video>
         </div>
       </div>
     </section>

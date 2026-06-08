@@ -9,7 +9,7 @@ staging folder; processed web assets live in `static/`.
 |------|---------|--------------------|
 | **Task rollouts** (6) | Results · Main Results | `caip_media/caip_demos/*.mov` → `static/videos/{fold_shorts,pour_almonds,pick_fruits,dispense_soap,turn_on_lamp,pull_tissue}.mp4` |
 | **MECKA raw-vs-CAIP saliency** | Overview | `caip_media/mecka_raw_vs_caip_3x2.mp4` → `static/videos/mecka_raw_vs_caip.mp4` |
-| **Encoder comparison — 3-view matrix** (lamp, pour × caip/dinov2/siglip2 × side/head) | Analysis | `caip_media/comparison_demos/{lamp,pour}/{caip,dinov2,siglip2}/{side.MOV,head.mp4}` → `static/videos/comparison/{task}/{enc}_{side,head}.mp4` |
+| **Encoder comparison — 3-view matrix** (lamp, pour, tissue × caip/dinov2/siglip2) | Analysis | `caip_media/comparison_demos/{task}/{enc}/{side.MOV,head.mp4[,heatmap.mp4]}` → `static/videos/comparison/{task}/{enc}_{side,head[,heatmap]}.mp4`. **tissue has real heatmaps**; lamp/pour heatmap row = black placeholders. |
 
 All transcoded to H.264 / yuv420p / faststart, muted, web-friendly (`ffmpeg -crf 27`, width capped at 960). Demo grid plays autoplay+loop+muted.
 
@@ -26,21 +26,15 @@ All transcoded to H.264 / yuv420p / faststart, muted, web-friendly (`ffmpeg -crf
 
 ## Notes
 - **Encoder comparison** is a live HTML matrix (rows = side / head cam / heatmap; cols = encoders).
-  The head cam + (future) heatmap share a recording so are already synced; the **side view** is a separate
-  phone recording aligned to the head cam by cross-correlating motion energy, then trimmed to the head's
-  window so the two loop in sync. Heatmap row = black placeholders until heatmaps exist (drop in and replace
-  the `.heatmap-ph` divs with `<video>`).
-- **Side-view sync offsets** (start second in the original `side.MOV`, length = head-cam duration). To
-  fine-tune, re-run the trim with adjusted `-ss`/`-t`:
-  | cell | side start | length |
-  |------|-----------|--------|
-  | lamp/caip | 1.30 | 14.30 |
-  | lamp/dinov2 | 12.70 | 11.90 |
-  | lamp/siglip2 | 0.80 | 13.40 |
-  | pour/caip | 0.80 | 25.90 |
-  | pour/dinov2 | 1.70 | 13.50 |
-  | pour/siglip2 | 0.20 | 16.70 |
-  (lamp aligned with high confidence; pour offsets are small — verify by eye and nudge if a cell looks off.)
+  The head cam + heatmap share a recording (already synced). The **side view** `.MOV` was manually
+  start-trimmed (lead-in removed) to align with its head cam; then each cell's clips are cut to the
+  shortest view's length (`min(side, head[, heatmap])`) from t=0 so all three loop in sync. tissue has
+  real heatmaps; lamp/pour heatmap row = black `.heatmap-ph` placeholders (swap for `<video>` when ready).
+- The heatmap source videos carry a title bar at top (e.g. "CAIP (ours) — text-conditioned"); the
+  transcode crops it (`crop=iw:ih-42:0:42`) for a uniform 16:9 grid.
+- Re-transcode (after editing a raw source): re-run the per-cell `min`-length cut script — see git history
+  for the command, or just ask Claude.
+- The one-at-a-time alignment helper lives at `caip_media/align/align.html` (+ `align/v/`), git-ignored.
 - Progression filmstrips were intentionally left out.
 - Re-transcode recipe: `ffmpeg -i in.mov -vf "scale='min(960,iw)':-2" -c:v libx264 -preset veryfast -crf 27 -pix_fmt yuv420p -movflags +faststart -an out.mp4`
 - Swap an image placeholder → `<img src="static/figures/NAME.png" alt="..." loading="lazy" />`
