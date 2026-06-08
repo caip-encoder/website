@@ -85,8 +85,12 @@ a:hover { text-decoration: underline; }
   font-weight: 500;
   font-size: clamp(2rem, 4.6vw, 3.1rem);
   line-height: 1.12; letter-spacing: -.01em;
-  margin: 0 auto 26px; max-width: 24ch;
+  margin: 0 auto 26px; max-width: none;
 }
+/* Keep the first line ("…Pre-training") intact so the title is 2 lines, not 3.
+   Release the constraint on narrow screens so it wraps instead of overflowing. */
+.title-l1 { white-space: nowrap; }
+@media (max-width: 640px) { .title-l1 { white-space: normal; } }
 
 .authors {
   display: flex; flex-wrap: wrap; justify-content: center;
@@ -120,7 +124,7 @@ a:hover { text-decoration: underline; }
 .btn-primary:hover { background: #000; }
 .btn .soon { font-weight: 500; opacity: .6; font-size: .85em; }
 .btn .hf-emoji { font-size: 17px; line-height: 1; }
-.btn[aria-disabled="true"] { cursor: default; }
+.btn[aria-disabled="true"] { cursor: default; pointer-events: none; }
 
 /* Hero video */
 .hero-video { margin: 0 0 28px; }

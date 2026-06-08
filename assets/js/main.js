@@ -71,6 +71,40 @@
     });
   }
 
+  /* ---------- Keep comparison-matrix videos in sync ----------
+     Each encoder column (side / head cam / saliency) is the same rollout
+     rendered three ways, so the three clips should stay frame-locked.
+     They are independent <video autoplay loop> elements that start at
+     staggered times (file sizes differ) and loop on their own clocks, so
+     without correction they drift apart. Group by comparison/<task>/<enc>
+     and nudge followers back to the leader (side view) when drift is large. */
+  var cmpVids = document.querySelectorAll("video.cmp-vid");
+  if (cmpVids.length) {
+    var groups = {};
+    cmpVids.forEach(function (v) {
+      var src = v.currentSrc || (v.querySelector("source") && v.querySelector("source").src) || "";
+      var m = src.match(/comparison\/([^/]+)\/([a-z0-9]+)_/i);
+      if (!m) return;
+      var key = m[1] + "/" + m[2]; /* task/encoder */
+      (groups[key] = groups[key] || []).push(v);
+    });
+    Object.keys(groups).forEach(function (key) {
+      var g = groups[key];
+      if (g.length < 2) return;
+      var leader = g[0]; /* side view — smallest file, loads first */
+      (function tick() {
+        var t = leader.currentTime;
+        for (var i = 1; i < g.length; i++) {
+          var v = g[i];
+          if (v.readyState >= 2 && Math.abs(v.currentTime - t) > 0.12) {
+            try { v.currentTime = t; } catch (e) {}
+          }
+        }
+        requestAnimationFrame(tick);
+      })();
+    });
+  }
+
   /* ---------- Nav active-section highlight ---------- */
   var sections = document.querySelectorAll("section[id]");
   var navLinks = document.querySelectorAll(".nav-links a");
