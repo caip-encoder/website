@@ -18,11 +18,11 @@ All transcoded to H.264 / yuv420p / faststart, muted, web-friendly (`ffmpeg -crf
 
 ## ⏳ Still placeholders
 
-| Slot (`data-slot`) | Section | Target path | Likely source |
-|--------------------|---------|-------------|---------------|
-| Analysis heatmap row (lamp/pour) | Analysis | (black `.heatmap-ph` cells) | **Not generated yet** — attention heatmaps for lamp/pour, per encoder (tissue done) |
+None — all media slots are filled. (Policy bar chart was removed: no figure; the results table covers it.)
 
-(Policy bar chart removed — no figure; results table covers it.)
+Heatmaps for lamp/pour are now in (rendered alongside their head cams, so already synced;
+title bar cropped, cut to each cell's length). All three tasks (lamp/pour/tissue) have full
+side / head / heatmap rows.
 
 ## Notes
 - **Encoder comparison** is a live HTML matrix (rows = side / head cam / heatmap; cols = encoders).
