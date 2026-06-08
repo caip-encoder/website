@@ -411,13 +411,15 @@
     <section id="analysis" class="section">
       <div class="container">
         <p class="section-eyebrow">Analysis</p>
-        <h2 class="section-title">What the encoders attend to</h2>
+        <h2 class="section-title">Each encoder&rsquo;s regions of focus</h2>
         <p class="prose">
           Side-by-side rollouts compare CAIP against DINOv2 and SigLIP&nbsp;2 on the same task. Each encoder is
-          shown from a <strong>side view</strong> and the robot&rsquo;s <strong>head camera</strong>, with an
-          <strong>attention heatmap</strong>, computed via each encoder&rsquo;s natural query mechanism,
-          showing where the model looks during manipulation. DINOv2 and SigLIP&nbsp;2 spread attention
-          across the scene, while CAIP concentrates on the hands and the manipulated objects.
+          shown from a <strong>side view</strong> and the robot&rsquo;s <strong>head camera</strong>, with a
+          <strong>saliency map</strong> computed using its native query mechanism: CAIP&rsquo;s
+          <em>text-conditioned cross-attention pool</em>, SigLIP&rsquo;s <em>learned-probe pooling</em>, and
+          DINOv2&rsquo;s <em>per-image PCA</em> of patch features. CAIP concentrates on the hands and manipulated
+          objects, while SigLIP&nbsp;2 scatters across the background and DINOv2 segments by appearance but is
+          instruction-unaware.
         </p>
 
         <!-- Turn On Lamp -->
@@ -438,7 +440,7 @@
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/dinov2_head.mp4" type="video/mp4" /></video>
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/siglip2_head.mp4" type="video/mp4" /></video>
 
-          <div class="cmp-rowlabel">Heatmap</div>
+          <div class="cmp-rowlabel">Saliency</div>
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/caip_heatmap.mp4" type="video/mp4" /></video>
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/dinov2_heatmap.mp4" type="video/mp4" /></video>
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/lamp/siglip2_heatmap.mp4" type="video/mp4" /></video>
@@ -462,7 +464,7 @@
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/dinov2_head.mp4" type="video/mp4" /></video>
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/siglip2_head.mp4" type="video/mp4" /></video>
 
-          <div class="cmp-rowlabel">Heatmap</div>
+          <div class="cmp-rowlabel">Saliency</div>
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/caip_heatmap.mp4" type="video/mp4" /></video>
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/dinov2_heatmap.mp4" type="video/mp4" /></video>
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/pour/siglip2_heatmap.mp4" type="video/mp4" /></video>
@@ -486,7 +488,7 @@
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/tissue/dinov2_head.mp4" type="video/mp4" /></video>
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/tissue/siglip2_head.mp4" type="video/mp4" /></video>
 
-          <div class="cmp-rowlabel">Heatmap</div>
+          <div class="cmp-rowlabel">Saliency</div>
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/tissue/caip_heatmap.mp4" type="video/mp4" /></video>
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/tissue/dinov2_heatmap.mp4" type="video/mp4" /></video>
           <video class="cmp-vid" autoplay muted loop playsinline preload="metadata"><source src="static/videos/comparison/tissue/siglip2_heatmap.mp4" type="video/mp4" /></video>
