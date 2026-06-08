@@ -30,6 +30,7 @@
         <a href="#results">Results</a>
         <a href="#analysis">Analysis</a>
         <a href="#ablations">Ablations</a>
+        <a href="#usage">Usage</a>
         <a href="#bibtex">BibTeX</a>
       </nav>
     </div>
@@ -559,6 +560,40 @@
       </div>
     </section>
 
+    <!-- ============================ USAGE ============================ -->
+    <section id="usage" class="section section-alt">
+      <div class="container">
+        <p class="section-eyebrow">Get started</p>
+        <h2 class="section-title">Using the encoder</h2>
+        <p class="prose">
+          CAIP loads as a standard <a href="https://huggingface.co/yuvansharma/caip-vitl256" target="_blank" rel="noopener">🤗 Transformers</a>
+          model. Install <code>transformers</code>, <code>torch</code>, and <code>pillow</code>, then encode an
+          image and instruction into text-conditioned visual features and action-aligned embeddings.
+        </p>
+        <div class="bibtex-card">
+          <pre><code id="usage-code">from transformers import AutoModel, AutoProcessor
+from PIL import Image
+import torch
+
+REPO = "yuvansharma/caip-vitl256"
+model = AutoModel.from_pretrained(REPO, trust_remote_code=True).eval()
+processor = AutoProcessor.from_pretrained(REPO, trust_remote_code=True)
+
+image = Image.open("example.png").convert("RGB")
+inputs = processor(images=image, text="pick up the red cup", return_tensors="pt")
+
+with torch.no_grad():
+    out = model(**inputs)
+
+# out.image_pooled    [B, 1024]       text-conditioned pooled image embedding
+# out.patch_features  [B, 256, 1024]  patch tokens
+# out.text_tokens     [B, 64, 1024]   text token embeddings
+# out.text_pooled     [B, 1024]       pooled text embedding</code></pre>
+          <button class="copy-btn" data-copy="#usage-code" type="button">Copy</button>
+        </div>
+      </div>
+    </section>
+
     <!-- ============================ BIBTEX ============================ -->
     <section id="bibtex" class="section">
       <div class="container">
@@ -571,7 +606,7 @@
   year   = {2026},
   note   = {Citation coming soon}
 }</code></pre>
-          <button class="copy-btn" id="copy-bibtex" type="button">Copy</button>
+          <button class="copy-btn" data-copy="#bibtex code" type="button">Copy</button>
         </div>
         <p class="table-note">Full author list and arXiv identifier coming soon.</p>
       </div>

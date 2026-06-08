@@ -23,19 +23,18 @@
     });
   });
 
-  /* ---------- Copy BibTeX ---------- */
-  var copyBtn = document.getElementById("copy-bibtex");
-  if (copyBtn) {
-    copyBtn.addEventListener("click", function () {
-      var code = document.querySelector("#bibtex code");
+  /* ---------- Copy buttons (BibTeX, code) ---------- */
+  document.querySelectorAll(".copy-btn[data-copy]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var code = document.querySelector(btn.getAttribute("data-copy"));
       if (!code) return;
       var text = code.innerText;
       var done = function () {
-        copyBtn.textContent = "Copied!";
-        copyBtn.classList.add("copied");
+        btn.textContent = "Copied!";
+        btn.classList.add("copied");
         setTimeout(function () {
-          copyBtn.textContent = "Copy";
-          copyBtn.classList.remove("copied");
+          btn.textContent = "Copy";
+          btn.classList.remove("copied");
         }, 1600);
       };
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -47,7 +46,7 @@
         document.body.removeChild(ta); done();
       }
     });
-  }
+  });
 
   /* ---------- Optional narration (AI readover) ---------- */
   /* Auto-enable the toggle only if an <audio> source has been provided. */
