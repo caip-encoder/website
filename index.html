@@ -194,10 +194,7 @@
 
         <!-- MEDIA SLOT: method-architecture -> Figure 2 architecture diagram -->
         <figure class="figure">
-          <div class="media-placeholder ratio-21x9" data-slot="method-architecture">
-            <span class="ph-label">CAIP architecture diagram</span>
-            <span class="ph-path">static/figures/architecture.png &nbsp;(Fig. 2)</span>
-          </div>
+          <img src="static/figures/architecture.png" alt="CAIP architecture: vision, text, and action transformers aligned via attention pooling and a contrastive loss" loading="lazy" />
           <figcaption>
             <strong>CAIP architecture.</strong> A ViT encodes image patches and a text transformer encodes
             language tokens, while an action transformer encodes a <em>T</em>-step action chunk into a single
@@ -284,15 +281,6 @@
             </table>
           </div>
           <p class="table-note">Success rates (%) over 12 trials per task. <b>Bold</b> = best, <u>underline</u> = second best.</p>
-
-          <!-- MEDIA SLOT: results-barchart -> Figure 1 (right) downstream policy bar chart (optional) -->
-          <figure class="figure figure-narrow">
-            <div class="media-placeholder ratio-4x3" data-slot="results-barchart">
-              <span class="ph-label">Downstream policy performance (bar chart)</span>
-              <span class="ph-path">static/figures/policy_barchart.png &nbsp;(Fig. 1 right)</span>
-            </div>
-            <figcaption>Average success rate by encoder. CAIP (76%) roughly doubles the strongest baseline.</figcaption>
-          </figure>
 
           <h3 class="subhead">Policy rollouts</h3>
           <p class="prose">Closed-loop rollouts of CAIP-conditioned policies across the six evaluation tasks on the Dexmate Vega with Sharpa Wave dexterous hands.</p>
