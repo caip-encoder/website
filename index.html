@@ -125,9 +125,8 @@
             Visual perception underpins robotic manipulation, yet the encoders that power modern policies were
             never designed for physical interaction. Image-text models like CLIP and SigLIP capture
             <strong>semantics</strong>; self-distilled models like DINOv2 capture fine-grained
-            <strong>geometry</strong>. But neither sees manipulation environments during training, and neither
-            receives <strong>action supervision</strong>. The result is a fundamental misalignment: strong
-            scene understanding, but no action-centric structure for downstream control.
+            <strong>spatial details</strong>. But neither sees manipulation environments during training, so their
+            representations lack any <strong>action-centric structure</strong>.
           </p>
           <p>
             The most direct fix, pre-training on robot trajectories, runs into a wall: robot data
